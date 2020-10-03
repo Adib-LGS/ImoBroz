@@ -34,7 +34,7 @@ class PropertyRepository extends ServiceEntityRepository
     /**
      * @return Property[]
      */
-    public function findLatest() : array
+    public function findLatest(): array
     {
         return $this->findAllUnsoldHomeQuery()
             ->setMaxResults(4)

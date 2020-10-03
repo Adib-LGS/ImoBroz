@@ -51,15 +51,16 @@ class PropertyController extends AbstractController
      */
     public function index() :Response
     {
-        /*Dans ce cas ci je récupère les maison non vendu en me servant de findAllUnsold() dans PropertyRepository
+        /*Dans ce cas ci je récupère les maison non vendu en me servant de findAllUnsold() dans PropertyRepository*/
         $property = $this->propertyRepository->findAllUnsold();
-        dd($property);*/
+        //dd($property);
 
-        /*Détécte le changement d'état si je vend la maison par exemple
-        $this->em->flush();*/
+        /*Détécte le changement d'état si je vend la maison par exemple*/
+        $this->em->flush();
 
         return $this->render('property/index.html.twig', [
             'current_menu' => 'properties',
+            'property' => $property
         ]);
     }
 
