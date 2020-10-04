@@ -3,6 +3,25 @@
 {% block title 'All Properties !'%}
 
 {% block body %}
+<div class="jumbotron">
+    <div class="container">
+        {{ form_start(form) }}
+            <div class="form-row align-items-end">
+                <div class="col">
+                    {{ form_row(form.minSurface) }}
+                </div>
+                 <div class="col">
+                    {{ form_row(form.maxPrice) }}
+                </div>
+                 <div class="col">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-secondary">Search</button>
+                    </div>
+                </div>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
 <div class="container">
     <h1>Our Homes</h1>
     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique at error, accusantium sequi libero illo obcaecati molestias vel cum, recusandae hic totam ullam velit ex soluta a nihil omnis et?</p>
