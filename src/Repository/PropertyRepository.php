@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Property;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -22,13 +23,13 @@ class PropertyRepository extends ServiceEntityRepository
 
     /**Récuperer les Maison non Vendu */
     /**
-     * @return Property[]
+     * @return Query
      */
-    public function findAllUnsold(): array
+    public function findAllUnsoldHomeQuery(): Query
     {
-        return $this->findAllUnsoldHomeQuery()
-            ->getQuery()
-            ->getResult();
+        return $this->findAllUnsoldHome()
+            ->getQuery();
+            //->getResult();
     }
 
     /**
@@ -36,13 +37,13 @@ class PropertyRepository extends ServiceEntityRepository
      */
     public function findLatest(): array
     {
-        return $this->findAllUnsoldHomeQuery()
+        return $this->findAllUnsoldHome()
             ->setMaxResults(4)
             ->getQuery()
             ->getResult();
     }
 
-    private function findAllUnsoldHomeQuery()
+    private function findAllUnsoldHome()
     {
         return $this->createQueryBuilder('p')
             ->where('p.sold = false');

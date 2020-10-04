@@ -1,28 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Properties{% endblock %}
+{% block title 'All Properties !'%}
 
 {% block body %}
 <div class="container">
     <h1>Our Homes</h1>
     <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Similique at error, accusantium sequi libero illo obcaecati molestias vel cum, recusandae hic totam ullam velit ex soluta a nihil omnis et?</p>
 </div>
-<div class="container">
-    <h2>The latest homes !</h2>
-    <div class="row-flex">
-        {% for properties in property %}
-            <div class="col-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="car-title">
-                            <a href="{{ path('property.show', {id: properties.id, slug: properties.slug}) }}">{{ properties.title }}</a>
-                        </h5>
-                        <p class="card-text">{{ properties.city }} ({{ properties.postalCode }})</p>
-                        <div class="text-primary">{{ properties.formatedPrice }} $</div>
-                    </div>
-                </div>
+<div class="container mt-4">
+    <h2>Homes for sales !</h2>
+        <div class="row">
+            {% for property in properties %}
+            <div class="col-md-4">
+                {% include 'property/_properties.html.twig' %}
             </div>
         {% endfor %}
-    </div>
+        </div>
+        <div class="pagination">
+            {{ knp_pagination_render(properties) }}
+        </div>
  </div>
 {% endblock %}

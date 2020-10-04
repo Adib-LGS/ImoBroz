@@ -6,7 +6,9 @@ use App\Entity\Property;
 
 use App\Repository\PropertyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -49,18 +51,19 @@ class PropertyController extends AbstractController
     /**
      * @Route("/properties", name="property.index")
      */
-    public function index() :Response
+    public function index(PaginatorInterface $paginator, Request $request) :Response
     {
-        /*Dans ce cas ci je récupère les maison non vendu en me servant de findAllUnsold() dans PropertyRepository*/
-        $property = $this->propertyRepository->findAllUnsold();
-        //dd($property);
+        /*Dans ce cas ci je récupère les maison non vendu en me servant de findAllUnsoldHomeQuery() dans PropertyRepository*/
+        $properties = $paginator->paginate($this->propertyRepository->findAllUnsoldHomeQuery(),
+        $request->query->getInt('page', 1), 12);
+        
 
         /*Détécte le changement d'état si je vend la maison par exemple*/
         $this->em->flush();
 
         return $this->render('property/index.html.twig', [
             'current_menu' => 'properties',
-            'property' => $property
+            'properties' => $properties
         ]);
     }
 
