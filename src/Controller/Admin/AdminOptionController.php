@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Option;
 use App\Form\OptionType;
 use App\Repository\OptionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AdminOptionController extends AbstractController
 {
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
     /**
      * @Route("/", name="admin.option_index", methods={"GET"})
      */
@@ -35,9 +42,8 @@ class AdminOptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($option);
-            $entityManager->flush();
+            $this->em->persist($option);
+            $this->em->flush();
 
             return $this->redirectToRoute('admin.option_index');
         }
@@ -57,7 +63,7 @@ class AdminOptionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('admin.option_index');
         }
@@ -73,10 +79,9 @@ class AdminOptionController extends AbstractController
      */
     public function delete(Request $request, Option $option): Response
     {
-        if ($this->isCsrfTokenValid('admin/delete'.$option->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($option);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('admin/delete' . $option->getId(), $request->get('_token'))) {
+            $this->em->remove($option);
+            $this->em->flush();
         }
 
         return $this->redirectToRoute('admin.option_index');
