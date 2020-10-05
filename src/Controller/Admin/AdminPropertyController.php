@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Option;
 use App\Entity\Property;
 use App\Form\PropertyType;
 use App\Repository\PropertyRepository;
@@ -32,7 +33,7 @@ class AdminPropertyController extends AbstractController
         //ETAPE 2 Je récupère toutes les maison (properties)
         $properties = $this->propertyRepository->findAll();
 
-        return $this->render('admin_property/index.html.twig', compact('properties'));
+        return $this->render('admin/admin_property/index.html.twig', compact('properties'));
     }
 
     /**
@@ -56,7 +57,7 @@ class AdminPropertyController extends AbstractController
             $this->addFlash('success', 'Created successfuly');
             return $this->redirectToRoute('admin_property.index');
         }
-        return $this->render('admin_property/create.html.twig', [
+        return $this->render('admin/admin_property/create.html.twig', [
             'property' => $property,
             'form' => $form->createView()
         ]);
@@ -67,6 +68,7 @@ class AdminPropertyController extends AbstractController
      */
     public function edit(Property $property, Request $request)
     {
+
         //Etape 3 on va utiliser les FormBuilder qui va etre basé sur l'entity Property
         $form = $this->createForm(PropertyType::class, $property);
         //S'occupe de la methode POST
@@ -78,7 +80,7 @@ class AdminPropertyController extends AbstractController
             $this->addFlash('success', 'Edited successfuly');
             return $this->redirectToRoute('admin_property.index');
         }
-        return $this->render('admin_property/edit.html.twig', [
+        return $this->render('admin/admin_property/edit.html.twig', [
             'property' => $property,
             'form' => $form->createView()
         ]);
@@ -90,7 +92,7 @@ class AdminPropertyController extends AbstractController
     public function delete(Property $property, Request $request)
     {
 
-        if($this->isCsrfTokenValid('delete' . $property->getId(), $request->get('_token'))) {
+        if($this->isCsrfTokenValid('admin/delete' . $property->getId(), $request->get('_token'))) {
             //$property va implicitement chercher le bon id du bien a delete
             //dd('Deleted man');
             $this->em->remove($property);
@@ -98,6 +100,6 @@ class AdminPropertyController extends AbstractController
             $this->addFlash('success', 'Deleted successfuly');
         }
 
-        return $this->redirectToRoute('admin_property.index');
+        return $this->redirectToRoute('admin/admin_property.index');
     }
 }
