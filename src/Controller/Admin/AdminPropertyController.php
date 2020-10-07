@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class AdminPropertyController extends AbstractController
 {
     /**ETAPE 1 j'injecte le PropertyRepository */
@@ -100,6 +101,6 @@ class AdminPropertyController extends AbstractController
             $this->addFlash('success', 'Deleted successfuly');
         }
 
-        return $this->redirectToRoute('admin/admin_property.index');
+        return $this->redirectToRoute('admin_property.index');
     }
 }
