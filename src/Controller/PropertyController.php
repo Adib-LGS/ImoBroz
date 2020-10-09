@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
 use App\Entity\Property;
 use App\Entity\PropertySearch;
 use App\Form\PropertySearchType;
+use App\Form\ContactType;
+use App\Notification\ContactNotification;
 use App\Repository\PropertyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -76,18 +79,36 @@ class PropertyController extends AbstractController
     /**
      * @Route("/properties/{slug}-{id}", name="property.show", requirements={"slug": "[a-z0-9\-]*"})
      */
-    public function show(Property $property, string $slug): Response //$property = $this->propertyRepository->find($id); Ce fait dans la méhode show grace a l'Injection
-    {
-        
+    public function show(Property $property, string $slug, Request $request, ContactNotification $notification): Response //$property = $this->propertyRepository->find($id); Ce fait dans la méhode show grace a l'Injection
+    {   
         if($property->getSlug() !== $slug){
             return $this->redirectToRoute('property.show', [
                 'id' => $property->getId(),
                 'slug' => $property->getSlug()
             ], 301);
         }
+
+        $contact = new Contact();
+        $contact->setProperty($property);
+
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $notification->notify($contact);
+            $this->addFlash('success', 'Your email has been send successfuly');
+            
+            return $this->redirectToRoute('property.show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ]);
+        }
+
+
         return $this->render('property/show.html.twig', [
             'property' => $property,
             'current_menu' => 'properties',
+            'form' => $form->createView()
         ]);
     }
 }
